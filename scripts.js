@@ -25,27 +25,25 @@ $(document).ready(function () {
         });
     });
 
-    $("#scale").click(function () {
-        //        compressed = !compressed;
-        //        $(".zone-container").toggleClass("compressed", 2000);
-        //        if(compressed){
-        //            $("#ruler-container, #events-container").fadeOut();
-        //        }else{
-        //            $("#ruler-container, #events-container").fadeIn();
-        //        }
-    });
-
     var nearestBelow = $(".event-container").first();
-    
+    var nearestAbove = $(nearestBelow).prev();
+
     $(".down-arrow").click(function () {
         jumping = true;
-        console.log("Jump");
         $("html, body").animate({
-            scrollTop: $(nearestBelow).offset().top - $(window).innerHeight() * 0.4
+            scrollTop: $(nearestBelow).offset().top - $(window).innerHeight() * 0.5
         }, 3000, function () {
             jumping = false;
         });
-    });    
+    });
+    $(".up-arrow").click(function () {
+        jumping = true;
+        $("html, body").animate({
+            scrollTop: $(nearestAbove).offset().top - $(window).innerHeight() * 0.5
+        }, 3000, function () {
+            jumping = false;
+        });
+    });
 
     $(window).on("scroll", function () {
         if ($("body").scrollTop() > topOffset) {
@@ -54,20 +52,20 @@ $(document).ready(function () {
             $("#hud, .arrow").fadeOut();
         }
 
-        var currentDepth = $("body").scrollTop() * px2cmConst * 2;
+        var currentDepth = $("body").scrollTop() * 2 * px2cmConst + 4;
 
         $("#depth-info").html(Math.floor(currentDepth) + "m");
 
         if (currentDepth < 200) {
-            changeZone("Epipelagic");
+            changeZone("epipelagic");
         } else if (currentDepth < 1000) {
-            changeZone("Mesopelagic");
+            changeZone("mesopelagic");
         } else if (currentDepth < 4000) {
-            changeZone("Bathypelagic");
+            changeZone("bathypelagic");
         } else if (currentDepth < 6000) {
-            changeZone("Abyssopelagic");
+            changeZone("abyssopelagic");
         } else {
-            changeZone("Hadalpelagic");
+            changeZone("hadalpelagic");
         }
 
 
@@ -77,10 +75,21 @@ $(document).ready(function () {
             $(".event-container").each(function () {
                 var eventDepth = $(this).attr("data-depth");
                 var distance = eventDepth - currentDepth;
+
                 if (distance > 0 && distance < recordClosest) {
                     recordClosest = distance;
                     nearestBelow = $(this);
-                    console.log($(nearestBelow).find("h2").html());
+
+                    if ($(nearestBelow).prev().length) {
+                        var prevDist = $(nearestBelow).prev().offset().top - $(window).scrollTop();
+
+                        if (prevDist < 0) {
+                            nearestAbove = $(nearestBelow).prev();
+                        } else {
+                            nearestAbove = $(nearestBelow).prev().prev();
+                        }
+                    }
+
                 }
             });
         }
@@ -93,7 +102,14 @@ $(document).ready(function () {
                 $("#current-zone").html(zoneName);
                 $("#current-zone").fadeIn();
             });
+            
+            $("#zone-info").fadeOut("fast", function () {
+                $("#zone-info").html($("#" + zoneName).find("div").html());
+                $("#zone-info").fadeIn();
+            });
+            
             currentZone = zoneName;
+            
         }
 
     }

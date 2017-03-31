@@ -1,15 +1,14 @@
 $blue-epi: rgb(100, 200, 220);
-$blue-meso: rgb(120, 120, 255);
+$blue-meso: rgb(100, 100, 220);
 $blue-bathy: rgb(80, 80, 200);
 $blue-abysso: rgb(60, 60, 150);
 $blue-hadal: rgb(40, 40, 80);
-
+$blue-hadal-dark: rgb(20, 20, 40);
 $sun-orange: rgb(240, 120, 10);
 body {
     margin: 0;
     min-height: 100vh;
     font-family: 'Comfortaa', cursive;
-    
     color: rgba(255, 255, 255, 0.7);
 }
 
@@ -26,62 +25,113 @@ h1 {
     position: fixed;
     bottom: 50%;
     left: 50%;
-    transform:translateX(-50%) rotateZ(45deg);
+    transform: translateX(-50%) rotateZ(45deg);
 }
-.arrow{
+
+.arrow {
     display: none;
     position: absolute;
-    
     width: .5cm;
     height: .5cm;
     transition: .3s all;
 }
-.arrow:hover{
+
+.arrow:hover {
     background-color: rgba($sun-orange, 0.7);
     transition: .3s all;
 }
-.up-arrow{
-    
+
+.up-arrow {
     border-left: solid 2px white;
     border-top: solid 2px white;
-    
     top: -1cm;
     left: -1cm;
 }
-.down-arrow{
+
+.down-arrow {
     border-right: solid 2px white;
     border-bottom: solid 2px white;
-    
     top: 1.5cm;
     left: 1.5cm;
 }
 
-.bounce-container{
+.bounce-container {
     position: absolute;
     top: 40%;
     left: 50%;
-    
     animation: bounce 3s infinite;
 }
+
 #down-indicator {
     font-size: 30px;
-    
     transform: rotateZ(180deg) translateX(50%);
-    
     color: $blue-hadal;
 }
 
 #hud {
-    
+    font-family: abysso, 'Comfortaa', cursive;
+    letter-spacing: 6px;
     display: none;
     z-index: 100;
     position: fixed;
     width: 100vw;
     height: 100vh;
 }
+#zone-info{
+    font-family: 'Slabo 27px', serif;
+    letter-spacing: normal;
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    padding: 40px 20px;
+    max-width: 600px;
+    
+    
+    color: white;
+}
 
-#test-message {
-    z-index: 200;
+#zone-info::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-12px);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+#depth-scaled {
+    position: fixed;
+    right: 0;
+    height: 100%;
+    width: 20px;
+    div{
+        width: 100%;
+    }
+    #epi {
+        height: 1.83%;
+        background-color: $blue-epi;
+    }
+    #meso {
+        height: 7.32%;
+        background-color: $blue-meso;
+    }
+    #bathy {
+        height: 27.17%;
+        background-color: $blue-bathy;
+    }
+    #abysso {
+        height: 18.3%;
+        background-color: $blue-abysso;
+    }
+    #hadal {
+        height: 45.38%;
+        background-color: $blue-hadal;
+    }
 }
 
 #depth-info {
@@ -101,8 +151,7 @@ h1 {
     top: 20%;
     transform: translateX(-50%);
     text-transform: uppercase;
-    letter-spacing: 4px;
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .ruler-mark {
@@ -111,11 +160,11 @@ h1 {
     height: 5px;
     box-sizing: border-box;
     width: 20px;
-    background-color: rgba(0, 0, 0, 0.3);
-    p{
+    background-color: rgba(255, 255, 255, 0.4);
+    p {
         font-size: 12px;
         font-weight: 700;
-        color: rgba(0, 0, 0, 0.3);
+        color: rgba(255, 255, 255, 0.4);
         position: absolute;
         left: 110%;
         top: -16px;
@@ -127,6 +176,9 @@ h1 {
     >h1 {
         display: none;
         font-size: 10px;
+    }
+    >div{
+        display: none;
     }
 }
 
@@ -140,7 +192,8 @@ h1 {
     height: 5px;
     background-color: rgba(0, 0, 0, 0.1);
 }
-#hadalpelagic::before{
+
+#hadalpelagic::before {
     display: none;
 }
 
@@ -161,6 +214,7 @@ h1 {
         border: solid 1px rgb(240, 120, 10);
     }
     .title {
+        font-family: abysso, 'Comfortaa', cursive;
         text-align: center;
         text-transform: uppercase;
         letter-spacing: 10px;
@@ -169,7 +223,8 @@ h1 {
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
         h1 {
-            font-size: 40px;
+            letter-spacing: 12px;
+            font-size: 60px;
             background: -webkit-linear-gradient($blue-meso, $blue-hadal);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -208,54 +263,43 @@ h1 {
     #hadalpelagic {
         height: calc(5497cm - 3000cm); // (6000m - 10994m) 4,994 total (45.38%)
         background-color: $blue-hadal;
-    }
-    #epipelagic.compressed {
-        height: 1.83%;
-    }
-    #mesopelagic.compressed {
-        height: 7.32%;
-    }
-    #bathypelagic.compressed {
-        height: 27.17%;
-    }
-    #abyssopelagic.compressed {
-        height: 18.3%;
-    }
-    #hadalpelagic.compressed {
-        height: 45.38%;
+        background: linear-gradient($blue-hadal, $blue-hadal-dark);
     }
 }
 
-.event-container{
-    font-family: 'Neuton', serif;
+.event-container {
+    font-family: 'Slabo 27px', serif;
     position: absolute;
     left: 100px;
-    h2{
+    h2 {
         margin: 0;
         font-size: 15px;
         transform: translateY(-50%);
     }
-    h2::after{
+    h2::after {
         content: "";
         position: absolute;
         right: -30px;
-        
         width: 15px;
         height: 15px;
         border: solid 1px $sun-orange;
-        
         transform: rotateZ(45deg);
     }
 }
 
-@keyframes bounce{
-    0%{
+@font-face {
+    font-family: abysso;
+    src: url("../fonts/abyssopelagic.otf");
+}
+
+@keyframes bounce {
+    0% {
         transform: translateY(0);
     }
-    70%{
+    70% {
         transform: translateY(-20px);
     }
-    100%{
+    100% {
         transform: translateY(0);
     }
 }

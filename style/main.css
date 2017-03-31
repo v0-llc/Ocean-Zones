@@ -53,14 +53,58 @@ h1 {
   color: #282850; }
 
 #hud {
+  font-family: abysso, 'Comfortaa', cursive;
+  letter-spacing: 6px;
   display: none;
   z-index: 100;
   position: fixed;
   width: 100vw;
   height: 100vh; }
 
-#test-message {
-  z-index: 200; }
+#zone-info {
+  font-family: 'Slabo 27px', serif;
+  letter-spacing: normal;
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 40px 20px;
+  max-width: 600px;
+  color: white; }
+
+#zone-info::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-12px);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5); }
+
+#depth-scaled {
+  position: fixed;
+  right: 0;
+  height: 100%;
+  width: 20px; }
+  #depth-scaled div {
+    width: 100%; }
+  #depth-scaled #epi {
+    height: 1.83%;
+    background-color: #64c8dc; }
+  #depth-scaled #meso {
+    height: 7.32%;
+    background-color: #6464dc; }
+  #depth-scaled #bathy {
+    height: 27.17%;
+    background-color: #5050c8; }
+  #depth-scaled #abysso {
+    height: 18.3%;
+    background-color: #3c3c96; }
+  #depth-scaled #hadal {
+    height: 45.38%;
+    background-color: #282850; }
 
 #depth-info {
   z-index: 100;
@@ -78,8 +122,7 @@ h1 {
   top: 20%;
   transform: translateX(-50%);
   text-transform: uppercase;
-  letter-spacing: 4px;
-  font-size: 20px; }
+  font-size: 24px; }
 
 .ruler-mark {
   z-index: 100;
@@ -87,11 +130,11 @@ h1 {
   height: 5px;
   box-sizing: border-box;
   width: 20px;
-  background-color: rgba(0, 0, 0, 0.3); }
+  background-color: rgba(255, 255, 255, 0.4); }
   .ruler-mark p {
     font-size: 12px;
     font-weight: 700;
-    color: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.4);
     position: absolute;
     left: 110%;
     top: -16px; }
@@ -101,6 +144,8 @@ h1 {
   .zone-container > h1 {
     display: none;
     font-size: 10px; }
+  .zone-container > div {
+    display: none; }
 
 .zone-container::before {
   z-index: 100;
@@ -131,6 +176,7 @@ h1 {
     border-radius: 50%;
     border: solid 1px #f0780a; }
   #sky .title {
+    font-family: abysso, 'Comfortaa', cursive;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 10px;
@@ -139,25 +185,26 @@ h1 {
     left: 50%;
     transform: translateX(-50%) translateY(-50%); }
     #sky .title h1 {
-      font-size: 40px;
-      background: -webkit-linear-gradient(#7878ff, #282850);
+      letter-spacing: 12px;
+      font-size: 60px;
+      background: -webkit-linear-gradient(#6464dc, #282850);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent; }
     #sky .title h2 {
       font-size: 15px;
-      color: #7878ff; }
+      color: #6464dc; }
 
 .global-container {
   height: 100vh; }
   .global-container #epipelagic {
-    border-top: solid 2px #7878ff;
+    border-top: solid 2px #6464dc;
     height: 100cm;
     background-color: #64c8dc;
-    background: linear-gradient(#64c8dc, #7878ff); }
+    background: linear-gradient(#64c8dc, #6464dc); }
   .global-container #mesopelagic {
     height: calc(500cm - 100cm);
-    background-color: #7878ff;
-    background: linear-gradient(#7878ff, #5050c8); }
+    background-color: #6464dc;
+    background: linear-gradient(#6464dc, #5050c8); }
   .global-container #bathypelagic {
     height: calc(2000cm - 500cm);
     background-color: #5050c8;
@@ -168,20 +215,11 @@ h1 {
     background: linear-gradient(#3c3c96, #282850); }
   .global-container #hadalpelagic {
     height: calc(5497cm - 3000cm);
-    background-color: #282850; }
-  .global-container #epipelagic.compressed {
-    height: 1.83%; }
-  .global-container #mesopelagic.compressed {
-    height: 7.32%; }
-  .global-container #bathypelagic.compressed {
-    height: 27.17%; }
-  .global-container #abyssopelagic.compressed {
-    height: 18.3%; }
-  .global-container #hadalpelagic.compressed {
-    height: 45.38%; }
+    background-color: #282850;
+    background: linear-gradient(#282850, #141428); }
 
 .event-container {
-  font-family: 'Neuton', serif;
+  font-family: 'Slabo 27px', serif;
   position: absolute;
   left: 100px; }
   .event-container h2 {
@@ -197,6 +235,9 @@ h1 {
     border: solid 1px #f0780a;
     transform: rotateZ(45deg); }
 
+@font-face {
+  font-family: abysso;
+  src: url("../fonts/abyssopelagic.otf"); }
 @keyframes bounce {
   0% {
     transform: translateY(0); }

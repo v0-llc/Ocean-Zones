@@ -1,0 +1,208 @@
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Comfortaa', cursive;
+  color: rgba(255, 255, 255, 0.7); }
+
+h1 {
+  margin: 0; }
+
+#scale {
+  z-index: 150;
+  width: 1cm;
+  height: 1cm;
+  border: solid 1px rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 50%;
+  left: 50%;
+  transform: translateX(-50%) rotateZ(45deg); }
+
+.arrow {
+  display: none;
+  position: absolute;
+  width: .5cm;
+  height: .5cm;
+  transition: .3s all; }
+
+.arrow:hover {
+  background-color: rgba(240, 120, 10, 0.7);
+  transition: .3s all; }
+
+.up-arrow {
+  border-left: solid 2px white;
+  border-top: solid 2px white;
+  top: -1cm;
+  left: -1cm; }
+
+.down-arrow {
+  border-right: solid 2px white;
+  border-bottom: solid 2px white;
+  top: 1.5cm;
+  left: 1.5cm; }
+
+.bounce-container {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  animation: bounce 3s infinite; }
+
+#down-indicator {
+  font-size: 30px;
+  transform: rotateZ(180deg) translateX(50%);
+  color: #282850; }
+
+#hud {
+  display: none;
+  z-index: 100;
+  position: fixed;
+  width: 100vw;
+  height: 100vh; }
+
+#test-message {
+  z-index: 200; }
+
+#depth-info {
+  z-index: 100;
+  text-align: center;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 25%;
+  font-size: 15px; }
+
+#current-zone {
+  z-index: 100;
+  position: fixed;
+  left: 50%;
+  top: 20%;
+  transform: translateX(-50%);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 20px; }
+
+.ruler-mark {
+  z-index: 100;
+  position: absolute;
+  height: 5px;
+  box-sizing: border-box;
+  width: 20px;
+  background-color: rgba(0, 0, 0, 0.3); }
+  .ruler-mark p {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    left: 110%;
+    top: -16px; }
+
+.zone-container {
+  position: relative; }
+  .zone-container > h1 {
+    display: none;
+    font-size: 10px; }
+
+.zone-container::before {
+  z-index: 100;
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: rgba(0, 0, 0, 0.1); }
+
+#hadalpelagic::before {
+  display: none; }
+
+#sky {
+  height: 90vh;
+  position: relative;
+  background: linear-gradient(to bottom left, lightblue 10%, #b414dc 70%, #f0780a 90%); }
+  #sky #sun {
+    position: absolute;
+    left: 0px;
+    transform: translateX(-50%);
+    bottom: -100px;
+    width: 200px;
+    height: 200px;
+    background-color: #f0780a;
+    background: linear-gradient(to bottom right, #f0780a, #ff3c14);
+    border-radius: 50%;
+    border: solid 1px #f0780a; }
+  #sky .title {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%); }
+    #sky .title h1 {
+      font-size: 40px;
+      background: -webkit-linear-gradient(#7878ff, #282850);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; }
+    #sky .title h2 {
+      font-size: 15px;
+      color: #7878ff; }
+
+.global-container {
+  height: 100vh; }
+  .global-container #epipelagic {
+    border-top: solid 2px #7878ff;
+    height: 100cm;
+    background-color: #64c8dc;
+    background: linear-gradient(#64c8dc, #7878ff); }
+  .global-container #mesopelagic {
+    height: calc(500cm - 100cm);
+    background-color: #7878ff;
+    background: linear-gradient(#7878ff, #5050c8); }
+  .global-container #bathypelagic {
+    height: calc(2000cm - 500cm);
+    background-color: #5050c8;
+    background: linear-gradient(#5050c8, #3c3c96); }
+  .global-container #abyssopelagic {
+    height: calc(3000cm - 2000cm);
+    background-color: #3c3c96;
+    background: linear-gradient(#3c3c96, #282850); }
+  .global-container #hadalpelagic {
+    height: calc(5497cm - 3000cm);
+    background-color: #282850; }
+  .global-container #epipelagic.compressed {
+    height: 1.83%; }
+  .global-container #mesopelagic.compressed {
+    height: 7.32%; }
+  .global-container #bathypelagic.compressed {
+    height: 27.17%; }
+  .global-container #abyssopelagic.compressed {
+    height: 18.3%; }
+  .global-container #hadalpelagic.compressed {
+    height: 45.38%; }
+
+.event-container {
+  font-family: 'Neuton', serif;
+  position: absolute;
+  left: 100px; }
+  .event-container h2 {
+    margin: 0;
+    font-size: 15px;
+    transform: translateY(-50%); }
+  .event-container h2::after {
+    content: "";
+    position: absolute;
+    right: -30px;
+    width: 15px;
+    height: 15px;
+    border: solid 1px #f0780a;
+    transform: rotateZ(45deg); }
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0); }
+  70% {
+    transform: translateY(-20px); }
+  100% {
+    transform: translateY(0); } }
+
+/*# sourceMappingURL=main.css.map */

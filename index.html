@@ -5,24 +5,30 @@
 <head>
     <title>Ocean Zones</title>
 
+    <!-- GOOGLE FONTS -->
     <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Neuton" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
 
+    <!-- JAVASCRIPT -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
-    <script src="node_modules/scrollmagic/scrollmagic/minified/ScrollMagic.min.js"></script>
+    <script src="scripts/events.js"></script>
+    <script src="scripts/scripts.js"></script>
 
-    <script src="scripts.js"></script>
-
+    <!-- FONTAWESOME -->
     <script src="https://use.fontawesome.com/47d86bc3a3.js"></script>
 
+    <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="style/main.css">
 </head>
 
 <body>
 
+    <!-- INTERFACE -->
+
+    <!-- Contains the ruler and depth markers on the left side of the interface (created through JS) -->
     <div id="ruler-container">
     </div>
 
@@ -32,13 +38,17 @@
     </div>
 
     <div id="hud">
-        <h1 id="current-zone">Epipelagic</h1>
-        <h1 id="depth-info">0ft.</h1>
-        
-        <div id="zone-info">
+        <div id="central-info">
+            <h1 id="current-zone">Epipelagic</h1>
+            <h1 id="depth-info">0ft.</h1>
+
+            <div id="zone-info">
+            </div>
         </div>
 
         <div id="depth-scaled">
+            <div id="marker"></div>
+
             <div id="epi"></div>
             <div id="meso"></div>
             <div id="bathy"></div>
@@ -48,15 +58,14 @@
 
     </div>
 
+    <!-- VISUALS -->
     <div class="global-container">
 
         <div id="sky">
             <div id="sun"></div>
 
             <div class="title">
-                <h1>Zones</h1>
-                <h2>of the</h2>
-                <h1>Ocean<br>Depths</h1>
+                <h1>Zones <span>of the</span> Ocean Depths</h1>
             </div>
 
             <div class="bounce-container">
@@ -65,95 +74,55 @@
 
         </div>
 
-        <div class="zone-container" id="epipelagic">
-            <h1>Epipelagic</h1>
-
-            <div>
-                <p>This surface layer is also called the sunlight zone and extends from the surface to 200 meters. Most visible light exists in this zone. All of this light creates a lot of heat, and is also responsible for the wide range of temperature changes in this zone.</p>
-            </div>
-
-        </div>
-
-        <div class="zone-container" id="mesopelagic">
-            <h1>Mesopelagic</h1>
+        <!-- ZONES -->
+        <div id="all-zones">
+            <canvas id="particles-canvas"></canvas>
             
-            <div>
-                <p>This zone is sometimes referred to as the twilight zone or the midwater zone, as the sunlight here is now very faint. The weakness of the light also means that the temperature begins to change dramatically here. In this zone, you'll also start to see bioluminescence appear on lifeforms.</p>
+            <div class="zone-container" id="epipelagic">
+                <h1>Epipelagic</h1>
+
+                <div>
+                    <p>This surface layer is also called the sunlight zone and extends from the surface to 200 meters. Most visible light exists in this zone. All of this light creates a lot of heat, and is also responsible for the wide range of temperature changes in this zone.</p>
+                </div>
+
+            </div>
+
+            <div class="zone-container" id="mesopelagic">
+                <h1>Mesopelagic</h1>
+
+                <div>
+                    <p>This zone is sometimes referred to as the twilight zone or the midwater zone, as the sunlight here is now very faint. The weakness of the light also means that the temperature begins to change dramatically here. In this zone, you'll also start to see bioluminescence appear on lifeforms.</p>
+                </div>
+            </div>
+
+            <div class="zone-container" id="bathypelagic">
+                <h1>Bathypelagic</h1>
+
+                <div>
+                    <p>The depths between 1000 and 4000 meters are known as the bathypelagic zone. All of the sunlight is gone now. It is for this reason that this zone is also known as the midnight zone. The temperature here is a constant 39&deg;F (4&deg;C)</p>
+                </div>
+            </div>
+
+            <div class="zone-container" id="abyssopelagic">
+                <h1>Abyssopelagic</h1>
+
+                <div>
+                    <p>The abyssal zone is the pitch-black bottom layer of the ocean. The waters here are constantly near freezing and there are very few creatures to be found.</p>
+                </div>
+            </div>
+
+            <div class="zone-container" id="hadalpelagic">
+                <h1>Hadalpelagic</h1>
+
+                <div>
+                    <p>The Hadalpelagic zone is the deepest part of the ocean.</p>
+                </div>
             </div>
         </div>
 
-        <div class="zone-container" id="bathypelagic">
-            <h1>Bathypelagic</h1>
-            
-            <div>
-                <p>The depths between 1000 and 4000 meters are known as the bathypelagic zone. All of the sunlight is gone now. It is for this reason that this zone is also known as the midnight zone. The temperature here is a constant 39&deg;F (4&deg;C)</p>
-            </div>
-        </div>
-
-        <div class="zone-container" id="abyssopelagic">
-            <h1>Abyssopelagic</h1>
-            
-            <div>
-                <p>The abyssal zone is the pitch-black bottom layer of the ocean. The waters here are constantly near freezing and there are very few creatures to be found.</p>
-            </div>
-        </div>
-
-        <div class="zone-container" id="hadalpelagic">
-            <h1>Hadalpelagic</h1>
-            
-            <div>
-                <p>The Hadalpelagic zone is the deepest part of the ocean.</p>
-            </div>
-        </div>
-
+        <!-- Contains all of the "events" which are populated through JS -->
         <div id="events-container">
-            <div class="event-container" data-depth="30">
-                <h2>Nitrogen Narcosis (30m)</h2>
-            </div>
 
-            <div class="event-container" data-depth="214">
-                <h2>Deepest Freedive (214m)</h2>
-            </div>
-
-            <div class="event-container" data-depth="534">
-                <h2>Open Sea Diving Depth Record (534m)</h2>
-            </div>
-            
-            <div class="event-container" data-depth="900">
-                <h2>Vampyroteuthis Infernalis (900m)</h2>
-            </div>
-            
-            <div class="event-container" data-depth="1500">
-                <h2>Deep Sea Angler (1500m)</h2>
-            </div>
-
-            <div class="event-container" data-depth="2250">
-                <h2>Sperm Whale (2250m)</h2>
-            </div>
-
-            <div class="event-container" data-depth="2992">
-                <h2>Cuvier's Beaked Whale (2992m)</h2>
-            </div>
-
-            <div class="event-container" data-depth="3800">
-                <h2>Wreck of the Titanic (3800m)</h2>
-            </div>
-            
-            <div class="event-container" data-depth="4290">
-                <h2>Ghost Octopus (4290m)</h2>
-            </div>
-
-            <div class="event-container" data-depth="8145">
-                <h2>Snailfish (8145m)</h2>
-            </div>
-
-            <div class="event-container" data-depth="10916">
-                <h2>Bathyscaphe <em>Trieste</em> (10911m)</h2>
-            </div>
-            
-            <div class="event-container" data-depth="10990">
-                <h2>Challenger Deep (10994m)</h2>
-            </div>
         </div>
 
     </div>

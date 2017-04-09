@@ -1,5 +1,6 @@
 // Sources:
 // http://ocean.nationalgeographic.com/ocean/photos/deep-sea-creatures/#/deep-sea01-frill-shark_18161_600x450.jpg
+//http://scubadiverlife.com/top-five-deepest-diving-animals/
 
 var compressed = false;
 
@@ -9,84 +10,55 @@ var px2cmConst = 0.02645833; // Used to convert px to cm
 
 var scrollDelta = 0;
 
+var muted = false;
+
+var layersLoaded = 0;
+
 $(document).ready(function () {
 
-    var counter = 0;
+    function SoundLayer(audioFile, fadeOutStart, fadeOutEnd) {
+        this.howl = new Howl({
+            src: ["audio/" + audioFile],
+            loop: true
+        });
 
-    var canvas = document.getElementById("particles-canvas");
-
-    if (canvas.getContext) {
-        var ctx = canvas.getContext("2d");
-        ctx.canvas.width = window.innerWidth;
-        ctx.canvas.height = window.innerHeight;
+        this.fadeOutStart = fadeOutStart;
+        this.fadeOutEnd = fadeOutEnd;
+        
+        this.targetVolume = 0.0;
     }
 
-    function Particle() {
-        this.lifetime = 0.0;
-        
-        this.size = 0;
-        this.speed = 0;
-        this.posX = 0;
-        this.posY = 0;
-        this.velX = 0;
-        this.velY = 0;
-        
-        this.init = particleInit;       
-    }
+    var soundLayers = [
+        new SoundLayer("waves.wav", 40, 200),
+        new SoundLayer("shimmer.wav", 700, 1000),
+        new SoundLayer("harpsi.wav", 1000, 2500),
+        new SoundLayer("guitar.wav", 3000, 4000),
+        new SoundLayer("swells.wav", 4000, 6000),
+        new SoundLayer("pad.wav", 6000, 8000),
+        new SoundLayer("piano.wav", 9000, 12000),
+        new SoundLayer("pings.wav", 8000, 9000)
+    ];
     
-    function particleInit(){
-        this.lifetime = 0.0;
-        
-        this.size = Math.random() * 2 + 1;
-        this.speed = Math.random() + 0.1;
-        this.posX = Math.random() * window.innerWidth;
-        this.posY = Math.random() * window.innerHeight;
-        this.velX = Math.random() * 0.2 - 0.1;
-        this.velY = Math.random() * 0.5 + 0.05;
+    adjustLayerVolumes();
+
+    for (var i = 0; i < soundLayers.length; i++) {
+        soundLayers[i].howl.once("load", function () {
+            layersLoaded++;
+
+            if (layersLoaded == soundLayers.length) {
+
+                for (var i = 0; i < soundLayers.length; i++) {
+                    soundLayers[i].howl.fade(0.0, soundLayers[i].targetVolume, 1000);
+                    soundLayers[i].howl.play();
+                }
+            }
+        });
     }
 
-    var numParticles = 200;
+    /**** AUDIO ****/
+    createParticles();
 
-    var particles = [];
-    
-    for(var i = 0; i < numParticles; i++){
-        particles[i] = new Particle();
-        particles[i].init();
-    }
-    
-    function draw() {
-        counter++;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        for (var i = 0; i < numParticles; i++) {
-            particles[i].lifetime += 0.01;
-            if(particles[i].lifetime > 0.2){
-                particles[i].lifetime = 0.2;
-            }
-            
-            particles[i].posX += particles[i].velX;
-            particles[i].posY += particles[i].velY + scrollDelta * -0.5;
-            
-            if(particles[i].posY < -10){
-                particles[i].init();
-            }
-            if(particles[i].posY > canvas.height + 10){
-                particles[i].init();
-            }
-            
-            ctx.beginPath();
-
-            ctx.arc(particles[i].posX, particles[i].posY, particles[i].size, 0, 2 * Math.PI);
-            ctx.closePath();
-
-            ctx.fillStyle = "rgba(255, 255, 255, "+particles[i].lifetime+")";
-            ctx.fill();
-        }
-        
-        window.requestAnimationFrame(draw);
-    }
-
-    draw();
+    animateParticles();
 
     var currentZone = "Epipelagic";
 
@@ -100,12 +72,32 @@ $(document).ready(function () {
     var nearestBelow = $(".event-container").first();
     var nearestAbove = $(nearestBelow).prev();
 
+    function adjustLayerVolumes() {
+
+        for (var i = 0; i < soundLayers.length; i++) {
+            var layer = soundLayers[i];
+            if (currentDepth > layer.fadeOutStart) {
+                var distPastStart = currentDepth - layer.fadeOutStart;
+                var fadeRange = layer.fadeOutEnd - layer.fadeOutStart;
+                var curVolume = 1.0 - (distPastStart / fadeRange);
+                if (curVolume < 0) {
+                    curVolume = 0;
+                }
+                layer.targetVolume = curVolume;
+                layer.howl.volume(curVolume);
+            } else {
+                layer.targetVolume = 1.0;
+                layer.howl.volume(1.0);
+            }
+        }
+    }
+    
     /**** ADJUSTMENTS ****/
     $(window).on("load resize", function () {
 
         ctx.canvas.width = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
-        
+
         topOffset = $(window).innerHeight() * 0.9;
 
         $("#ruler-container").empty();
@@ -121,23 +113,30 @@ $(document).ready(function () {
 
     /******** UI EVENTS ********/
 
-    $(".down-arrow").click(function () {
+    function jumpToEvent(direction) {
+
         jumping = true;
+
+        var distance = Math.abs($(window).scrollTop() - $(direction).offset().top);
+
         $("html, body").animate({
-            scrollTop: $(nearestBelow).offset().top - $(window).innerHeight() * 0.5
-        }, 3000, function () {
+            scrollTop: $(direction).offset().top - $(window).innerHeight() * 0.5
+        }, distance, function () {
             jumping = false;
             calculateEvents();
         });
+    }
+
+    $(".down-arrow").click(function () {
+        jumpToEvent(nearestBelow);
     });
     $(".up-arrow").click(function () {
-        jumping = true;
-        $("html, body").animate({
-            scrollTop: $(nearestAbove).offset().top - $(window).innerHeight() * 0.5
-        }, 3000, function () {
-            jumping = false;
-            calculateEvents();
-        });
+        jumpToEvent(nearestAbove);
+    });
+
+    $("#audio-toggle").click(function () {
+        Howler.mute(!muted);
+        muted = !muted;
     });
 
     /**** SCROLLING EVENTS ****/
@@ -156,18 +155,20 @@ $(document).ready(function () {
         scrollDelta = 0;
     }
 
+    
+
     $(window).on("scroll", function () {
         if ($("body").scrollTop() > topOffset) {
             $("#hud, .arrow").fadeIn();
         } else {
             $("#hud, .arrow").fadeOut();
         }
-        
+
         var particlesOffset = $("#all-zones").offset().top - $("body").scrollTop();
-        if(particlesOffset < 0){
+        if (particlesOffset < 0) {
             particlesOffset = 0;
         }
-        
+
         $("#particles-canvas").css("top", particlesOffset);
 
         newPos = window.scrollY;
@@ -175,7 +176,7 @@ $(document).ready(function () {
         if (lastPos != null) {
             var delta = newPos - lastPos;
             scrollDelta = delta;
-        }        
+        }
 
         lastPos = newPos;
         timer && clearTimeout(timer);
@@ -183,6 +184,8 @@ $(document).ready(function () {
 
         /**** DEPTH CALCULATIONS ****/
         currentDepth = $("body").scrollTop() * 2 * px2cmConst + 4;
+
+        adjustLayerVolumes();
 
         // Get depth as a percentage of total depth, and set marker
         var depthPercent = (currentDepth / 10994.0) * 100.0;

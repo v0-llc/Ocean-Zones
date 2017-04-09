@@ -14,7 +14,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
+    <script src="node_modules/howler/dist/howler.min.js"></script>
+    
     <script src="scripts/events.js"></script>
+    <script src="scripts/particles.js"></script>
     <script src="scripts/scripts.js"></script>
 
     <!-- FONTAWESOME -->
@@ -28,6 +31,11 @@
 
     <!-- INTERFACE -->
 
+    <div id="audio-toggle">
+        <div class="diamond"></div>
+        <i class="fa fa-volume-up" aria-hidden="true"></i>
+    </div>
+    
     <!-- Contains the ruler and depth markers on the left side of the interface (created through JS) -->
     <div id="ruler-container">
     </div>
@@ -38,6 +46,7 @@
     </div>
 
     <div id="hud">
+        
         <div id="central-info">
             <h1 id="current-zone">Epipelagic</h1>
             <h1 id="depth-info">0ft.</h1>

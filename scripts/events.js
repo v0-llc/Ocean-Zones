@@ -1,8 +1,9 @@
 // The Event "class"
-function Event(name, depth, info) {
+function Event(name, depth, info, image) {
     this.name = name;
     this.depth = depth;
     this.info = info;
+    this.image = image;
 }
 
 var events = [
@@ -15,7 +16,7 @@ var events = [
     new Event(
         "Deepest Freedive",
         214,
-        "The Austrian freediver Herbert Nitsch is the current freediving world record champion. This title was given to him when he set a world record in the 'No Limits' discipline at a depth of 214 meters."),
+        "The Austrian freediver Herbert Nitsch is the current freediving world record champion. This title was given to him when he set a world record in the 'No Limits' discipline at a depth of 214 meters. Impressive, but we still have a long way to go..."),
 
     new Event(
         "Tuffy",
@@ -40,6 +41,12 @@ var events = [
         534,
         "Ling hawkfish river shark, goldeye vimba blackchin weasel shark ghost knifefish. Boxfish whale shark scorpionfish scup Pacific cod, cookie-cutter shark yellow-edged moray tonguefish butterflyfish rockweed gunnel scup."
     ),
+    
+    new Event(
+        "Emperor Penguin",
+        535,
+        "Deepest diving bird"
+    ),
 
     new Event(
         "Basking Shark",
@@ -49,7 +56,7 @@ var events = [
 
     new Event(
         "Leatherback Sea Turtle",
-        1000,
+        1280,
         "Although most sea turtles live at shallower depths, the Leatherback can dive to great depths in search of their prey, jellyfish."
     ),
 
@@ -58,11 +65,24 @@ var events = [
         1500,
         "Mojarra dwarf gourami. Codlet cownose ray, eeltail catfish naked-back knifefish Gila trout prowfish dragonfish yellowhead jawfish."
     ),
+    
+    new Event(
+        "Gulper Eel",
+        2000,
+        "Deepest eel"
+    ),
 
     new Event(
         "Sperm Whale",
         2250,
-        "Trench, lamprey grenadier grunion Mexican golden trout bramble shark rohu speckled trout tilefish emperor angelfish tilapia North American darter, jawfish perch houndshark. Australasian salmon alewife javelin, platy pompano dolphinfish, loach minnow delta smelt ghoul. Whale catfish sandfish starry flounder grenadier Pacific cod leaffish rudd algae eater goosefish. Bullhead guitarfish sand diver pufferfish megamouth shark ilisha."
+        "Trench, lamprey grenadier grunion Mexican golden trout bramble shark rohu speckled trout tilefish emperor angelfish tilapia North American darter, jawfish perch houndshark. Australasian salmon alewife javelin, platy pompano dolphinfish, loach minnow delta smelt ghoul. Whale catfish sandfish starry flounder grenadier Pacific cod leaffish rudd algae eater goosefish. Bullhead guitarfish sand diver pufferfish megamouth shark ilisha.",
+        "spermwhale"
+    ),
+    
+    new Event(
+        "Elephant Seal",
+        2388,
+        ""
     ),
 
     new Event(
@@ -75,6 +95,12 @@ var events = [
         "Vampyroteuthis Infernalis",
         3000,
         ""
+    ),
+    
+    new Event(
+        "Portugese Dogfish",
+        3700,
+        "Deepest shark"
     ),
 
     new Event(
@@ -94,16 +120,39 @@ var events = [
         4400,
         ""
     ),
+    new Event(
+        "Cayman Trough",
+        7686,
+        ""
+    ),
+    
+    new Event(
+        "Submarine Internet Cable",
+        8000,
+        ""
+    ),
 
     new Event(
         "Fangtooth Fish",
         5000,
         ""
     ),
+    
+    new Event(
+        "Atacama Trench",
+        8065,
+        ""
+    ),
 
     new Event(
         "Snailfish",
         8145,
+        ""
+    ),
+    
+    new Event(
+        "Puerto Rico Trench",
+        8800,
         ""
     ),
 
@@ -138,6 +187,7 @@ function loadEvents() {
             "<div class='event-container' style='"+randLR+":" + (Math.random() * 10 + 5) + "%' data-depth='" + currentEvent.depth + "'>" +
             "<h2>" + currentEvent.name + " (" + currentEvent.depth + "m)</h2>" +
             (currentEvent.info !== "" ? "<p>" + currentEvent.info + "</p>" : "") +
+            (currentEvent.image !== undefined ? "<img src='images/"+currentEvent.image+".svg' alt='"+currentEvent.image+"'>" : "") +
             "</div>"
         );
     }

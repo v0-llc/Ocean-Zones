@@ -1,33 +1,44 @@
 // Sources:
 // http://ocean.nationalgeographic.com/ocean/photos/deep-sea-creatures/#/deep-sea01-frill-shark_18161_600x450.jpg
-//http://scubadiverlife.com/top-five-deepest-diving-animals/
-
-var compressed = false;
+// http://scubadiverlife.com/top-five-deepest-diving-animals/
+// Blue whale dive:
+// https://animalbiotelemetry.biomedcentral.com/articles/10.1186/s40317-016-0109-4
+// http://animals.nationalgeographic.com/animals/birds/emperor-penguin/
 
 var jumping = false;
 
 var px2cmConst = 0.02645833; // Used to convert px to cm
 
+// How much has the screen been recently scrolled (used to move particles up and down)
 var scrollDelta = 0;
 
+// Is the audio muted?
 var muted = false;
 
+// How many audio layers have been loaded?
+// Need to wait until all are loaded to play them...
 var layersLoaded = 0;
 
-$(document).ready(function () {
+$(function () {
 
+    /**** AUDIO ****/
+    // A class for the layers (tracks) of the composition
+    // Each layer has an audio file and a start/end position for fading in and out
     function SoundLayer(audioFile, fadeOutStart, fadeOutEnd) {
         this.howl = new Howl({
             src: ["audio/" + audioFile],
             loop: true
         });
 
+        // At what depth should this sound start fading out?
         this.fadeOutStart = fadeOutStart;
+        // At what depth should it finish fading out?
         this.fadeOutEnd = fadeOutEnd;
-        
+
         this.targetVolume = 0.0;
     }
 
+    // Load all sounds and set their depths...
     var soundLayers = [
         new SoundLayer("waves.wav", 40, 200),
         new SoundLayer("shimmer.wav", 700, 1000),
@@ -38,13 +49,16 @@ $(document).ready(function () {
         new SoundLayer("piano.wav", 9000, 12000),
         new SoundLayer("pings.wav", 8000, 9000)
     ];
-    
+
+    // Adjust all of the volumes before playing
     adjustLayerVolumes();
 
     for (var i = 0; i < soundLayers.length; i++) {
         soundLayers[i].howl.once("load", function () {
+            // Increment this as files are loaded
             layersLoaded++;
 
+            // Once they're all loaded, loop through and play them all.
             if (layersLoaded == soundLayers.length) {
 
                 for (var i = 0; i < soundLayers.length; i++) {
@@ -55,9 +69,8 @@ $(document).ready(function () {
         });
     }
 
-    /**** AUDIO ****/
+    /**** PARTICLES ****/
     createParticles();
-
     animateParticles();
 
     var currentZone = "Epipelagic";
@@ -72,6 +85,7 @@ $(document).ready(function () {
     var nearestBelow = $(".event-container").first();
     var nearestAbove = $(nearestBelow).prev();
 
+    // Audio layers are faded in/out according to "depth" (scroll position)
     function adjustLayerVolumes() {
 
         for (var i = 0; i < soundLayers.length; i++) {
@@ -91,7 +105,7 @@ $(document).ready(function () {
             }
         }
     }
-    
+
     /**** ADJUSTMENTS ****/
     $(window).on("load resize", function () {
 
@@ -111,27 +125,46 @@ $(document).ready(function () {
         });
     });
 
+    //window.setInterval(checkZones, 100)
+    
     /******** UI EVENTS ********/
 
     function jumpToEvent(direction) {
 
         jumping = true;
 
-        var distance = Math.abs($(window).scrollTop() - $(direction).offset().top);
+        var distance = Math.abs($(window).scrollTop() + ($(window).innerHeight() * 0.5) - $(direction).offset().top);
 
         $("html, body").animate({
-            scrollTop: $(direction).offset().top - $(window).innerHeight() * 0.5
-        }, distance, function () {
+            scrollTop: $(direction).offset().top - $(window).innerHeight() * 0.5 // distance from event
+        }, distance * 0.5, function () {
             jumping = false;
             calculateEvents();
         });
     }
 
+    function stopJump() {
+        jumping = false;
+        $("html, body").stop();
+    }
+
     $(".down-arrow").click(function () {
+        if (jumping) {
+            stopJump();
+            calculateEvents();
+        }
         jumpToEvent(nearestBelow);
     });
     $(".up-arrow").click(function () {
+        if(jumping){
+            stopJump();
+            calculateEvents();
+        }
         jumpToEvent(nearestAbove);
+    });
+    $(".event-mark").click(function(){
+        var thisID = $(this).attr("data-eventID");
+        jumpToEvent($(".event-container[data-eventID="+thisID+"]"));
     });
 
     $("#audio-toggle").click(function () {
@@ -155,15 +188,23 @@ $(document).ready(function () {
         scrollDelta = 0;
     }
 
-    
+    // If the user wants to start scrolling, stop the animated scroll to the next element.
+    $("body").bind("mousewheel", function () {
+        // Only do this if "jumping"
+        if (jumping) {
+            stopJump();
+        }
+    });
 
     $(window).on("scroll", function () {
+
         if ($("body").scrollTop() > topOffset) {
-            $("#hud, .arrow").fadeIn();
+            $("#hud").fadeIn();
         } else {
-            $("#hud, .arrow").fadeOut();
+            $("#hud").fadeOut();
         }
 
+        /**** Particle Movement ****/
         var particlesOffset = $("#all-zones").offset().top - $("body").scrollTop();
         if (particlesOffset < 0) {
             particlesOffset = 0;
@@ -192,42 +233,30 @@ $(document).ready(function () {
         $("#marker").css("top", depthPercent + "%");
 
         // Set the depth output according to the currentDepth
-        $("#depth-info").html(Math.floor(currentDepth) + "m");
-
-        // Change zones as applicable
-        if (currentDepth < 200) {
-            changeZone("epipelagic");
-        } else if (currentDepth < 1000) {
-            changeZone("mesopelagic");
-        } else if (currentDepth < 4000) {
-            changeZone("bathypelagic");
-        } else if (currentDepth < 6000) {
-            changeZone("abyssopelagic");
-        } else {
-            changeZone("hadalpelagic");
-        }
+        $("#depth-info").html(Math.floor(currentDepth) + "m");        
 
         // Reset the record.
         recordClosest = 10000;
 
         // Don't fade events in and out when "jumping" (wait until destination is reached)
+        // Also don't recalculate which one is the closest...
         if (!jumping) {
             calculateEvents();
         }
 
-        //        if (showingEvent !== showingEventOld) {
-        //            if (showingEvent) {
-        //                $("#central-info, #scale").animate({
-        //                    opacity: 0.0
-        //                });
-        //            } else {
-        //                $("#central-info, #scale").animate({
-        //                    opacity: 1.0
-        //                });
-        //            }
-        //            
-        //            showingEventOld = showingEvent;
-        //        }        
+//        if (showingEvent !== showingEventOld) {
+//            if (showingEvent) {
+//                $("#zone-info").animate({
+//                    opacity: 0.0
+//                });
+//            } else {
+//                $("#zone-info").animate({
+//                    opacity: 1.0
+//                });
+//            }
+//
+//            showingEventOld = showingEvent;
+//        }        
 
     });
 
@@ -242,15 +271,17 @@ $(document).ready(function () {
 
             var pxDist = $(this).offset().top - $("body").scrollTop();
 
+            // Check to see if the event is on screen
             if (pxDist < $(window).innerHeight() * 0.8 && pxDist > $(window).innerHeight() * 0.1) {
-                if (!$(this).find("p").is(":visible")) {
-                    $(this).find("p").fadeIn();
+                
+                if ($(this).find("p").hasClass("hidden")) {
+                    $(this).find("p").removeClass("hidden");
                 }
                 showingEvent = true;
 
             } else {
-                if ($(this).find("p").is(":visible")) {
-                    $(this).find("p").fadeOut();
+                if (!$(this).find("p").hasClass("hidden")) {
+                    $(this).find("p").addClass("hidden");
                 }
             }
 
@@ -269,8 +300,24 @@ $(document).ready(function () {
                 }
             }
         });
+        //console.log($(nearestAbove).find("h2").text());
     }
 
+    function checkZones(){
+        // Change zones as applicable
+        if (currentDepth < 200) {
+            changeZone("epipelagic");
+        } else if (currentDepth < 1000) {
+            changeZone("mesopelagic");
+        } else if (currentDepth < 4000) {
+            changeZone("bathypelagic");
+        } else if (currentDepth < 6000) {
+            changeZone("abyssopelagic");
+        } else {
+            changeZone("hadalpelagic");
+        }
+    }
+    
     function changeZone(zoneName) {
         if (zoneName !== currentZone) {
             $("#current-zone").fadeOut("fast", function () {
@@ -278,10 +325,10 @@ $(document).ready(function () {
                 $("#current-zone").fadeIn();
             });
 
-            //            $("#zone-info").fadeOut("fast", function () {
-            //                $("#zone-info").html($("#" + zoneName).find("div").html());
-            //                $("#zone-info").fadeIn();
-            //            });
+            $("#zone-info").fadeOut("fast", function () {
+                $("#zone-info").html($("#" + zoneName).find("div").html());
+                $("#zone-info").fadeIn();
+            });
 
             currentZone = zoneName;
 

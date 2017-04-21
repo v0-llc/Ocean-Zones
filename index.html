@@ -3,6 +3,11 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
+    <meta name="author" content="Theodore Michels">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Ocean Zones</title>
 
     <!-- GOOGLE FONTS -->
@@ -11,11 +16,13 @@
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
 
     <!-- JAVASCRIPT -->
+    <!-- Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
     <script src="node_modules/howler/dist/howler.min.js"></script>
-    
+
+    <!-- Custom Scripts -->
     <script src="scripts/events.js"></script>
     <script src="scripts/particles.js"></script>
     <script src="scripts/scripts.js"></script>
@@ -35,18 +42,20 @@
         <div class="diamond"></div>
         <i class="fa fa-volume-up" aria-hidden="true"></i>
     </div>
-    
+
     <!-- Contains the ruler and depth markers on the left side of the interface (created through JS) -->
     <div id="ruler-container">
     </div>
 
-    <div id="scale">
-        <div class="up-arrow arrow"></div>
-        <div class="down-arrow arrow"></div>
-    </div>
+
 
     <div id="hud">
-        
+
+        <div id="scale">
+            <div class="up-arrow arrow"></div>
+            <div class="down-arrow arrow"></div>
+        </div>
+
         <div id="central-info">
             <h1 id="current-zone">Epipelagic</h1>
             <h1 id="depth-info">0ft.</h1>
@@ -56,6 +65,7 @@
         </div>
 
         <div id="depth-scaled">
+            <div id="event-marks-container"></div>
             <div id="marker"></div>
 
             <div id="epi"></div>
@@ -86,7 +96,7 @@
         <!-- ZONES -->
         <div id="all-zones">
             <canvas id="particles-canvas"></canvas>
-            
+
             <div class="zone-container" id="epipelagic">
                 <h1>Epipelagic</h1>
 
@@ -124,7 +134,7 @@
                 <h1>Hadalpelagic</h1>
 
                 <div>
-                    <p>The Hadalpelagic zone is the deepest part of the ocean.</p>
+                    <p>The Hadalpelagic zone is the deepest part of the ocean. It extends from the ocean floor down into the deepest trenches of the Earth's crust.</p>
                 </div>
             </div>
         </div>

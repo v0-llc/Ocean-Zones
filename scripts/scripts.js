@@ -65,6 +65,8 @@ $(function () {
                     soundLayers[i].howl.fade(0.0, soundLayers[i].targetVolume, 1000);
                     soundLayers[i].howl.play();
                 }
+                
+                $("#audio-loading").fadeOut("fast");
             }
         });
     }
@@ -168,8 +170,11 @@ $(function () {
     });
 
     $("#audio-toggle").click(function () {
+        
         Howler.mute(!muted);
         muted = !muted;
+        $(this).toggleClass("muted");
+
     });
 
     /**** SCROLLING EVENTS ****/
@@ -274,14 +279,14 @@ $(function () {
             // Check to see if the event is on screen
             if (pxDist < $(window).innerHeight() * 0.8 && pxDist > $(window).innerHeight() * 0.1) {
                 
-                if ($(this).find("p").hasClass("hidden")) {
-                    $(this).find("p").removeClass("hidden");
+                if ($(this).hasClass("hidden")) {
+                    $(this).removeClass("hidden");
                 }
                 showingEvent = true;
 
             } else {
-                if (!$(this).find("p").hasClass("hidden")) {
-                    $(this).find("p").addClass("hidden");
+                if (!$(this).hasClass("hidden")) {
+                    $(this).addClass("hidden");
                 }
             }
 

@@ -16,7 +16,10 @@ var events = [
     new Event(
         "Deepest Freedive",
         214,
-        "The Austrian freediver Herbert Nitsch is the current freediving world record champion. This title was given to him when he set a world record in the 'No Limits' discipline at a depth of 214 meters. Impressive, but we still have a long way to go..."),
+        "The Austrian freediver Herbert Nitsch is the current freediving world record champion. This title was given to him when he set a world record in the 'No Limits' discipline at a depth of 214 meters. Impressive, but we still have a long way to go...",
+        "nitsch.jpg"
+    ),
+        
 
     new Event(
         "Tuffy",
@@ -33,7 +36,8 @@ var events = [
     new Event(
         "Deepest Blue Whale Dive",
         506,
-        "At a length of up to 30m and a weight of over 200 tons, the blue whale is the largest whale, and the largest animal known to have ever existed."
+        "At a length of up to 30m and a weight of over 200 tons, the blue whale is the largest whale, and the largest animal known to have ever existed.",
+        "bluewhale.jpg"
     ),
 
     new Event(
@@ -45,43 +49,50 @@ var events = [
     new Event(
         "Emperor Penguin",
         565,
-        "At sea, emperor penguins dive up to 565 meters - deeper than any other bird - to feed on fish, squid, and krill. When diving, they can stay underwater for more than 20 minutes."
+        "At sea, emperor penguins dive up to 565 meters - deeper than any other bird - to feed on fish, squid, and krill. When diving, they can stay underwater for more than 20 minutes.",
+        "emperor-penguins.jpg" //http://cdn.pcwallart.com/images/emperor-penguins-swimming-wallpaper-1.jpg
     ),
 
     new Event(
         "Basking Shark",
         910,
-        ""
+        "",
+        "basking-shark.jpg" //http://www.deepseanews.com/wp-content/uploads/2009/05/basking_shark_med.jpg
     ),
 
     new Event(
         "Leatherback Sea Turtle",
         1280,
-        "Although most sea turtles live at shallower depths, the Leatherback can dive to great depths in search of their prey, jellyfish."
+        "Although most sea turtles live at shallower depths, the Leatherback can dive to great depths in search of their prey, jellyfish.",
+        "leatherback.jpg"
     ),
 
     new Event(
         "Deep Sea Angler",
         1675,
-        "Melanocetus Eustalus is one of many species of deep sea anglerfish. This one in particular is found off the Pacific coast of Mexico."
+        "Melanocetus Eustalus is one of many species of deep sea anglerfish. This one in particular is found off the Pacific coast of Mexico.",
+        "angler.jpg" //http://extrememarine.org.uk/2016/11/large-ladies-and-parisitic-males-extreme-sex-in-the-deep-sea/
     ),
 
     new Event(
         "Sperm Whale",
         2250,
-        "Also known as the cachalot, the sperm whale is the largest of the toothed whales and the largest toothed predator. It is the second deepest diving whale, following only Cuvier's Beaked Whale."
+        "Also known as the cachalot, the sperm whale is the largest of the toothed whales and the largest toothed predator. It is the second deepest diving whale, following only Cuvier's Beaked Whale.",
+        "sperm-whale.jpg" //http://www.nationalgeographic.com/animals/mammals/s/sperm-whale/
     ),
     
     new Event(
         "Elephant Seal",
         2388,
-        "The elephant seal can hold its breath for over 100 minutes, longer than any noncetacean mammal. The deepest recorded dive is 2,388m, deeper than most whales!"
+        "The elephant seal can hold its breath for over 100 minutes, longer than any noncetacean mammal. The deepest recorded dive is 2,388m, deeper than most whales!",
+        "elephant-seal.jpg"
     ),
 
     new Event(
         "Cuvier's Beaked Whale",
         2992,
-        "The most widely distributed of the beaked whales, Cuvier's Beaked Whale is also notable for having the deepest recorded dive of any mammal. At two hours and 17 minutes, it holds the record for the longest dive as well."
+        "The most widely distributed of the beaked whales, Cuvier's Beaked Whale is also notable for having the deepest recorded dive of any mammal. At two hours and 17 minutes, it holds the record for the longest dive as well.",
+        "cuviers-beaked-whale.jpg"
     ),
     
     new Event(
@@ -168,10 +179,10 @@ function loadEvents() {
         var depthPercent = (currentEvent.depth / 10994.0) * 100;
 
         $("#events-container").append(
-            "<div class='event-container' style='"+randLR+":" + randPercent + "%' data-eventID="+i+" data-depth='" + currentEvent.depth + "'>" +
+            "<div class='event-container hidden' style='"+randLR+":" + randPercent + "%' data-eventID="+i+" data-depth='" + currentEvent.depth + "'>" +
             "<h2>" + currentEvent.name + " (" + currentEvent.depth + "m)</h2>" +
-            (currentEvent.info !== "" ? "<p class='hidden'>" + currentEvent.info + "</p>" : "") +
-            (currentEvent.image !== undefined ? "<img src='images/"+currentEvent.image+".svg' alt='"+currentEvent.image+"'>" : "") +
+            (currentEvent.info !== "" ? "<p>" + currentEvent.info + "</p>" : "") +
+            (currentEvent.image !== undefined ? "<div class='img-box'><img src='images/"+currentEvent.image+"' alt='"+currentEvent.image+"'></div>" : "") +
             "</div>"
         );
         

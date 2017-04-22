@@ -20,7 +20,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
-    <script src="node_modules/howler/dist/howler.min.js"></script>
+    <script src="scripts/lib/howler.min.js"></script>
 
     <!-- Custom Scripts -->
     <script src="scripts/events.js"></script>
@@ -40,7 +40,10 @@
 
     <div id="audio-toggle">
         <div class="diamond"></div>
-        <i class="fa fa-volume-up" aria-hidden="true"></i>
+        <i class="fa fa-volume-up a-on" aria-hidden="true"></i>
+        <i class="fa fa-volume-off a-off" aria-hidden="true"></i>
+        
+        <div id="audio-loading">. . .</div>
     </div>
 
     <!-- Contains the ruler and depth markers on the left side of the interface (created through JS) -->

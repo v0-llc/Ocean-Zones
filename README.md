@@ -10,3 +10,5 @@ Along the user's journey to the bottom of the ocean, significant events are mark
 A sidebar navigation is provided (also to scale) which can be used to jump between these events.
 
 As the user goes deeper, the musical environment changes as well, as different tracks fade out, resulting in a more simplified composition.
+
+URL on GitHub pages: https://theodoremichels.github.io/Ocean-Zones/

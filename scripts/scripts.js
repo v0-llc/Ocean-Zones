@@ -13,7 +13,10 @@ var px2cmConst = 0.02645833; // Used to convert px to cm
 var scrollDelta = 0;
 
 // Is the audio muted?
-var muted = false;
+var muted = true;
+
+// Has the audio context been started?
+var audioStarted = false;
 
 // How many audio layers have been loaded?
 // Need to wait until all are loaded to play them...
@@ -21,6 +24,18 @@ var layersLoaded = 0;
 
 $(function () {
 
+    // jQuery element caching
+    
+    $window = $(window);
+    $body = $('body');
+    $hud = $('#hud');
+    $currentZone = $('#current-zone'); // The name of the current zone
+    $zoneInfo = $('#zone-info'); // Shows information about the current zone
+    $depthInfo = $('#depth-info'); // Shows the current depth in meters
+    $ruler = $('#ruler-container'); // Shows depth markers on left side of screen
+    $particles = $('#particles-canvas');
+    $audioToggle = $('#audio-toggle'); // Button to toggle sound
+    
     /**** AUDIO ****/
     // A class for the layers (tracks) of the composition
     // Each layer has an audio file and a start/end position for fading in and out
@@ -63,7 +78,6 @@ $(function () {
 
                 for (var i = 0; i < soundLayers.length; i++) {
                     soundLayers[i].howl.fade(0.0, soundLayers[i].targetVolume, 1000);
-                    soundLayers[i].howl.play();
                 }
                 
                 $("#audio-loading").fadeOut("fast");
@@ -75,9 +89,9 @@ $(function () {
     createParticles();
     animateParticles();
 
-    var currentZone = "Epipelagic";
+    var currentZone = 'Epipelagic'; // Default to top zone
 
-    var topOffset = $(window).innerHeight() * 0.9;
+    var topOffset = $window.innerHeight() * 0.9;
 
     var showingEvent = false;
     var showingEventOld = false;
@@ -109,16 +123,18 @@ $(function () {
     }
 
     /**** ADJUSTMENTS ****/
-    $(window).on("load resize", function () {
+    
+    
+    $window.on('load resize', function () {
 
         ctx.canvas.width = window.innerWidth;
         ctx.canvas.height = window.innerHeight;
 
         topOffset = $(window).innerHeight() * 0.9;
 
-        $("#ruler-container").empty();
+        $ruler.empty();
         for (var i = 10; i < 10994; i += 10) {
-            $("#ruler-container").append("<div class='ruler-mark' style='top: " + (i * 0.5 + (topOffset * px2cmConst)) + "cm'><p>" + i + "m</p></div>");
+            $ruler.append("<div class='ruler-mark' style='top: " + (i * 0.5 + (topOffset * px2cmConst)) + "cm'><p>" + i + "m</p></div>");
         }
 
         $(".event-container").each(function () {
@@ -127,7 +143,7 @@ $(function () {
         });
     });
 
-    //window.setInterval(checkZones, 100)
+    window.setInterval(checkZones, 100);
     
     /******** UI EVENTS ********/
 
@@ -137,7 +153,7 @@ $(function () {
 
         var distance = Math.abs($(window).scrollTop() + ($(window).innerHeight() * 0.5) - $(direction).offset().top);
 
-        $("html, body").animate({
+        $('html, body').animate({
             scrollTop: $(direction).offset().top - $(window).innerHeight() * 0.5 // distance from event
         }, distance * 0.5, function () {
             jumping = false;
@@ -147,35 +163,50 @@ $(function () {
 
     function stopJump() {
         jumping = false;
-        $("html, body").stop();
+        $('html, body').stop();
     }
 
-    $(".down-arrow").click(function () {
-        if (jumping) {
-            stopJump();
-            calculateEvents();
-        }
-        jumpToEvent(nearestBelow);
-    });
-    $(".up-arrow").click(function () {
-        if(jumping){
-            stopJump();
-            calculateEvents();
-        }
-        jumpToEvent(nearestAbove);
-    });
+    function _arrowEvents(){
+        $(".down-arrow").click(function () {
+            if (jumping) {
+                stopJump();
+                calculateEvents();
+            }
+            jumpToEvent(nearestBelow);
+        });
+        
+        $(".up-arrow").click(function () {
+            if(jumping){
+                stopJump();
+                calculateEvents();
+            }
+            jumpToEvent(nearestAbove);
+        });
+    }
+    
+    
     $(".event-mark").click(function(){
         var thisID = $(this).attr("data-eventID");
         jumpToEvent($(".event-container[data-eventID="+thisID+"]"));
     });
 
-    $("#audio-toggle").click(function () {
-        
-        Howler.mute(!muted);
-        muted = !muted;
-        $(this).toggleClass("muted");
+    // Toggles the audio on and off.
+    function _audioToggle(){
+        $audioToggle.click(function () {
 
-    });
+            Howler.mute(!muted);
+            muted = !muted;
+            $(this).toggleClass("muted");
+
+            if(!audioStarted){
+                for (var i = 0; i < soundLayers.length; i++) {
+                    soundLayers[i].howl.play();
+                }
+                audioStarted = true;
+            }
+            
+        });
+    }    
 
     /**** SCROLLING EVENTS ****/
 
@@ -191,26 +222,36 @@ $(function () {
     function clearScroll() {
         lastPos = null;
         scrollDelta = 0;
+    }    
+    
+    function _jumpInterrupt(){
+        // If the user wants to start scrolling, stop the animated scroll to the next element.
+        $body.bind('mousewheel', function () {
+            // Only do this if "jumping"
+            if (jumping) {
+                stopJump();
+            }
+        });
     }
 
-    // If the user wants to start scrolling, stop the animated scroll to the next element.
-    $("body").bind("mousewheel", function () {
-        // Only do this if "jumping"
-        if (jumping) {
-            stopJump();
-        }
-    });
-
-    $(window).on("scroll", function () {
-
-        if ($("body").scrollTop() > topOffset) {
-            $("#hud").fadeIn();
+    
+    function _toggleHUD(){
+        if ($window.scrollTop() > topOffset) {
+            $hud.fadeIn();
         } else {
-            $("#hud").fadeOut();
+            $hud.fadeOut();
         }
+    }
+    
+    function scrollUpdates(){
+        _toggleHUD();
+    }
+    
+    $window.on('scroll', function () {
+        scrollUpdates();
 
         /**** Particle Movement ****/
-        var particlesOffset = $("#all-zones").offset().top - $("body").scrollTop();
+        var particlesOffset = $("#all-zones").offset().top - $window.scrollTop();
         if (particlesOffset < 0) {
             particlesOffset = 0;
         }
@@ -229,7 +270,7 @@ $(function () {
         timer = setTimeout(clearScroll, 30);
 
         /**** DEPTH CALCULATIONS ****/
-        currentDepth = $("body").scrollTop() * 2 * px2cmConst + 4;
+        currentDepth = $window.scrollTop() * 2 * px2cmConst + 4;
 
         adjustLayerVolumes();
 
@@ -238,7 +279,7 @@ $(function () {
         $("#marker").css("top", depthPercent + "%");
 
         // Set the depth output according to the currentDepth
-        $("#depth-info").html(Math.floor(currentDepth) + "m");        
+        $depthInfo.html(Math.floor(currentDepth) + "m");        
 
         // Reset the record.
         recordClosest = 10000;
@@ -249,19 +290,19 @@ $(function () {
             calculateEvents();
         }
 
-//        if (showingEvent !== showingEventOld) {
-//            if (showingEvent) {
-//                $("#zone-info").animate({
-//                    opacity: 0.0
-//                });
-//            } else {
-//                $("#zone-info").animate({
-//                    opacity: 1.0
-//                });
-//            }
-//
-//            showingEventOld = showingEvent;
-//        }        
+        if (showingEvent !== showingEventOld) {
+            if (showingEvent) {
+                $("#zone-info").animate({
+                    opacity: 0.0
+                });
+            } else {
+                $("#zone-info").animate({
+                    opacity: 1.0
+                });
+            }
+
+            showingEventOld = showingEvent;
+        }        
 
     });
 
@@ -270,14 +311,14 @@ $(function () {
         showingEvent = false;
 
         // Present events when they appear on screen.
-        $(".event-container").each(function () {
+        $('.event-container').each(function () {
             var eventDepth = $(this).attr("data-depth");
             var distance = eventDepth - currentDepth;
 
-            var pxDist = $(this).offset().top - $("body").scrollTop();
+            var pxDist = $(this).offset().top - $window.scrollTop();
 
             // Check to see if the event is on screen
-            if (pxDist < $(window).innerHeight() * 0.8 && pxDist > $(window).innerHeight() * 0.1) {
+            if (pxDist < $window.innerHeight() * 0.8 && pxDist > $window.innerHeight() * 0.1) {
                 
                 if ($(this).hasClass("hidden")) {
                     $(this).removeClass("hidden");
@@ -325,9 +366,9 @@ $(function () {
     
     function changeZone(zoneName) {
         if (zoneName !== currentZone) {
-            $("#current-zone").fadeOut("fast", function () {
-                $("#current-zone").html(zoneName);
-                $("#current-zone").fadeIn();
+            $currentZone.fadeOut('fast', function () {
+                $currentZone.html(zoneName);
+                $currentZone.fadeIn();
             });
 
             $("#zone-info").fadeOut("fast", function () {
@@ -340,5 +381,13 @@ $(function () {
         }
 
     }
+    
+    function init(){
+        _arrowEvents();
+        _audioToggle();
+        _jumpInterrupt();
+    }
+    
+    init();
 
 });

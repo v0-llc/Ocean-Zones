@@ -211,12 +211,12 @@ h1 {
         font-family: 'Slabo 27px', serif;
         letter-spacing: normal;
         position: absolute;
-        top: 45%;
+        top: 66%;
         left: 50%;
         transform: translateX(-50%);
-        padding: 10px;
+        width: calc(100% - 60px);
+        padding: 0 20px;
         max-width: 400px;
-
     }
 
 }
@@ -548,6 +548,11 @@ h1 {
     }
     #depth-scaled{
         width: 20px;
+    }
+    #hud {
+        #zone-info {
+            padding: 0 40px 0 20px;
+        }
     }
 }
 @media(max-width: 450px){

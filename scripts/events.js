@@ -11,7 +11,21 @@ var events = [
     new Event(
         "Nitrogen Narcosis",
         30,
-        "Nitrogen narcosis is an alteration of consciousness that occurs while diving at depth. It is caused by the anesthetic effect of certain gases at high pressure. Past a depth of 30m, reasoning and memory may be affected, and divers may experience a delayed response to stimuli."),
+        "Nitrogen narcosis is an alteration of consciousness that occurs while diving at depth. It is caused by the anesthetic effect of certain gases at high pressure. Past a depth of 30m, reasoning and memory may be affected, and divers may experience a delayed response to stimuli."
+    ),
+
+    new Event(
+        "Recreational Diving Limit",
+        40,
+        "The recreational diving limit is generally 40 meters for certified divers. Beyond this depth, the risks increase significantly, and specialized training and equipment are required."
+    ),
+
+    new Event(
+        "World's Deepest Swimming Pool",
+        60,
+        "At 60m deep, Deep Dive Dubai is the world's deepest swimming pool.",
+        "deep-dive-dubai.jpg"
+    ),
 
     new Event(
         "Deepest Freedive",
@@ -68,6 +82,13 @@ var events = [
         "The basking shark is the world's second largest living fish, typically reaching 6 to 8 meters in length. They are slow moving filter feeders found in all of the world's temperate oceans.",
         "basking-shark.jpg" //http://www.deepseanews.com/wp-content/uploads/2009/05/basking_shark_med.jpg
     ),
+
+    new Event(
+        "Giant Squid",
+        1000,
+        "Although their maximum depth is unknown, the elusive giant squid, one of the world's largest invertebrates, is estimated to inhabit depths of up to 1000m.",
+        "giant-squid.jpg"
+    ),
     
     new Event(
         "Leatherback Sea Turtle",
@@ -95,6 +116,13 @@ var events = [
         2388,
         "The elephant seal can hold its breath for over 100 minutes, longer than any noncetacean mammal. The deepest recorded dive is 2,388m, deeper than most whales!",
         "elephant-seal.jpg"
+    ),
+
+    new Event(
+        "Giant Isopod",
+        2500,
+        "Giant isopods are large crustaceans that live in the deep-sea. Although they can be found at various depths, 2500m is the depth record for any giant isopod.",
+        "giant-isopod.jpg"
     ),
 
     new Event(
@@ -194,6 +222,13 @@ var events = [
     ),
 
     new Event(
+        "Hadal Amphipod",
+        10500,
+        "The hadal amphipod is a type of crustacean that's been found living in Challenger Deep, making it the deepest living animal.",
+        "hadal-amphipod.jpg"
+    ),
+
+    new Event(
         "Bathyscaphe <em>Trieste</em>",
         10911,
         "On January 23 1960, Jacques Piccard and Don Walsh were the first two humans to visit the deepest known point of Earth's oceans, Challenger Deep. The bathyscaphe, called <em>Trieste</em>, was designed by Jacques Piccard's father, Auguste Piccard."
@@ -201,7 +236,7 @@ var events = [
     new Event(
         "Challenger Deep",
         10980,
-        "The Challenger Deep is the deepest known point in the Earth's seabed. It is located in the Pacific Ocean, at the southern end of the Mariana Trench, located south of Japan. Only four descents of Challenger Deep have ever been achieved."
+        "The Challenger Deep is the deepest known point in the Earth's seabed. It is located in the Pacific Ocean, at the southern end of the Mariana Trench, located south of Japan. Less than 30 descents of Challenger Deep have ever been achieved."
     )
 
 ];
@@ -220,7 +255,7 @@ function loadEvents() {
             "<div class='event-container hidden' style='"+randLR+":" + randPercent + "%' data-eventID="+i+" data-depth='" + currentEvent.depth + "'>" +
             "<h2>" + currentEvent.name + " (" + currentEvent.depth + "m)</h2>" +
             (currentEvent.info !== "" ? "<p>" + currentEvent.info + "</p>" : "") +
-            (currentEvent.image !== undefined ? "<div class='img-box'><img src='images/"+currentEvent.image+"' alt='"+currentEvent.image+"'></div>" : "") +
+            (currentEvent.image !== undefined ? "<div class='img-box'><div class='img' style='background-image: url(images/"+currentEvent.image+");'></div>" : "") +
             "</div>"
         );
         

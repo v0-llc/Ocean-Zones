@@ -43,11 +43,16 @@ $title-font: abysso, 'Comfortaa', sans-serif;
 
 /**** GENERAL ****/
 
+html {
+    background-color: $blue-hadal;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
     font-family: 'Comfortaa', cursive;
     color: $hud-color;
+    background-color: $blue-hadal;
 }
 
 h1 {
@@ -301,7 +306,7 @@ h1 {
 #sky {
     height: 90vh;
     position: relative;
-    background: linear-gradient(to bottom left, $blue-hadal 20%, rgb(180, 20, 220) 80%, rgb(240, 120, 10) 100%);
+    background: radial-gradient(circle at bottom left, rgb(240, 120, 10) 20%, rgb(180, 20, 220) 70%, $blue-hadal 100%);
     #sun {
         position: absolute;
         left: 0;
@@ -478,14 +483,17 @@ h1 {
         transform: translateX(-50%) rotateZ(45deg);
         transition: .5s all;
         box-shadow: 10px -10px transparentize($blue-hadal, 0.2);
-        
-        img{
-            z-index: 300;
+
+        .img {
             position: absolute;
             top: 50%;
             left: 50%;
-            height: 300px;
             transform: translateX(-50%) translateY(-50%) rotateZ(-45deg);
+            z-index: 300;
+            width: 145%;
+            height: 145%;
+            background-size: cover;
+            background-position: center center;
         }
     }
 
@@ -526,7 +534,10 @@ h1 {
         transform: translateX(-50%);
         
         .img-box{
-            display: none;
+            // display: none;
+            top: -150px;
+            width: 100px;
+            height: 100px;
         }
     }
 }
@@ -552,6 +563,8 @@ h1 {
     #hud {
         #zone-info {
             padding: 0 40px 0 20px;
+            top: auto;
+            bottom: 20px;
         }
     }
 }

@@ -14,11 +14,11 @@ var events = [
         "Nitrogen narcosis is an alteration of consciousness that occurs while diving at depth. It is caused by the anesthetic effect of certain gases at high pressure. Past a depth of 30m, reasoning and memory may be affected, and divers may experience a delayed response to stimuli."
     ),
 
-    new Event(
-        "Recreational Diving Limit",
-        40,
-        "The recreational diving limit is generally 40 meters for certified divers. Beyond this depth, the risks increase significantly, and specialized training and equipment are required."
-    ),
+    // new Event(
+    //     "Recreational Diving Limit",
+    //     40,
+    //     "The recreational diving limit is generally 40 meters for certified divers. Beyond this depth, the risks increase significantly, and specialized training and equipment are required."
+    // ),
 
     new Event(
         "World's Deepest Swimming Pool",

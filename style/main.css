@@ -194,7 +194,7 @@ h1 {
   top: 66%;
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 60px);
+  width: calc(100% - 40px);
   padding: 0 20px;
   max-width: 400px;
 }
@@ -410,7 +410,7 @@ h1 {
   opacity: 1;
   font-size: 16px;
   max-width: 400px;
-  padding: 20px;
+  padding: 10px;
   margin: 15px auto;
   border-top: solid 1px rgba(255, 255, 255, 0.8);
   border-bottom: solid 1px rgba(255, 255, 255, 0.8);
@@ -468,6 +468,9 @@ h1 {
     left: 50% !important;
     transform: translateX(-50%);
   }
+  .event-container p {
+    margin: 5px auto;
+  }
   .event-container .img-box {
     top: -150px;
     width: 100px;
@@ -488,14 +491,16 @@ h1 {
     width: 20px;
   }
   #hud #zone-info {
-    padding: 0 40px 0 20px;
+    padding: 0 30px 0 60px;
+    width: calc(100% - 90px);
     top: auto;
     bottom: 20px;
   }
 }
 @media (max-width: 450px) {
   .event-container {
-    width: 200px;
+    left: 54% !important;
+    width: calc(100% - 80px);
   }
 }
 
